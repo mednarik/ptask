@@ -1,10 +1,26 @@
-import json
+import json, curses
 
-def draw(data: dict):
+def get_data() -> dict:
+    with open("data.json", "r") as file:
+        data = json.load(file)
+    return data
+    
+
+def get_draw_string(data: dict):
+    string = ""
     for task in data:
-        print(f"{task} {data[task]["deadline"]}")
+        string += f"{task} {data[task]['deadline']}\n"
+    return string
 
-with open("data.json", "r") as file:
-    data = json.load(file)
 
-draw(data)
+def main(stdscr):
+    stdscr.clear()
+    stdscr.addstr(get_draw_string(get_data()))
+
+    while True:
+        key = stdscr.getch()
+
+        if key == ord("n"):
+            break
+        
+curses.wrapper(main)
